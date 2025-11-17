@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Room } from '../types';
 import RoomDetail from './RoomDetail';
@@ -38,17 +37,17 @@ const RoomManager: React.FC<RoomManagerProps> = ({ rooms, onUpdateRoom, onAddRoo
 
   return (
     <div className="space-y-6 animate-fade-in">
-       <div className="bg-white p-6 rounded-xl shadow-lg">
-        <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
-          <h2 className="text-2xl font-bold text-slate-700">Gerenciador de Cômodos</h2>
+       <div className="card mb-6">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
+          <h2 className="section-title" style={{ margin: 0 }}>Gerenciador de Cômodos</h2>
           <div className="flex items-center gap-4">
-            <div className="text-right bg-slate-50 p-3 rounded-lg">
-              <span className="text-slate-500 font-medium text-sm">Custo Total da Obra</span>
-              <p className="text-2xl font-bold text-[#EF7669]">{formatCurrency(totalProjectCost)}</p>
+            <div className="card" style={{ padding: '0.75rem', backgroundColor: '#F9FAFB' }}>
+              <span className="data-label" style={{ textAlign: 'right' }}>Custo Total da Obra</span>
+              <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-accent)' }}>{formatCurrency(totalProjectCost)}</p>
             </div>
-            <div className="text-right bg-slate-50 p-3 rounded-lg">
-              <span className="text-slate-500 font-medium text-sm">Área Total do Imóvel</span>
-              <p className="text-2xl font-bold text-[#EF7669]">{totalSquareMeters.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m²</p>
+            <div className="card" style={{ padding: '0.75rem', backgroundColor: '#F9FAFB' }}>
+              <span className="data-label" style={{ textAlign: 'right' }}>Área Total do Imóvel</span>
+              <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-accent)' }}>{totalSquareMeters.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m²</p>
             </div>
           </div>
         </div>
@@ -57,11 +56,12 @@ const RoomManager: React.FC<RoomManagerProps> = ({ rooms, onUpdateRoom, onAddRoo
             type="text"
             value={newRoomName}
             onChange={(e) => setNewRoomName(e.target.value)}
-            className="flex-grow p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#EF7669] focus:border-[#EF7669]"
+            className="input-field"
+            style={{ flexGrow: 1 }}
             placeholder="Nome do novo cômodo (ex: Quarto do Bebê)"
           />
-          <button type="submit" className="flex items-center gap-2 bg-[#EF7669] text-white font-semibold px-4 py-3 rounded-lg hover:bg-[#E65F4C] shadow transition-all transform hover:scale-105">
-            <PlusIcon />
+          <button type="submit" className="btn-primary" style={{ padding: '0.75rem 1rem' }}>
+            <PlusIcon style={{ width: '1.25rem', height: '1.25rem' }}/>
             <span>Adicionar</span>
           </button>
         </form>

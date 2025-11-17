@@ -29,51 +29,59 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         onLogin({ name: isLoginView ? 'Usuário' : name, email });
     };
     
-    const commonInputClass = "w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#EF7669] focus:border-[#EF7669]";
-    const commonButtonClass = "w-full py-3 px-4 rounded-lg font-semibold transition-colors";
+    // Classes CSS puras
+    const buttonStyle = {
+        padding: '0.75rem 1rem', 
+        borderRadius: '8px', 
+        fontWeight: 600, 
+        transition: 'color 0.2s',
+        cursor: 'pointer',
+        border: 'none',
+        flex: 1
+    };
 
     return (
-        <div className="max-w-md mx-auto mt-10 animate-fade-in">
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-                <div className="flex border-b border-slate-200 mb-6">
+        <div className="animate-fade-in" style={{ maxWidth: '400px', margin: '2.5rem auto' }}>
+            <div className="card">
+                <div className="flex" style={{ borderBottom: '1px solid #E5E7EB', marginBottom: '1.5rem' }}>
                     <button 
                         onClick={() => setIsLoginView(true)}
-                        className={`flex-1 pb-3 text-lg font-bold text-center ${isLoginView ? 'text-[#EF7669] border-b-2 border-[#EF7669]' : 'text-slate-500'}`}
+                        style={{ ...buttonStyle, color: isLoginView ? 'var(--color-accent)' : 'var(--color-sub-data)', borderBottom: isLoginView ? '2px solid var(--color-accent)' : 'none' }}
                     >
                         Entrar
                     </button>
                     <button 
                         onClick={() => setIsLoginView(false)}
-                        className={`flex-1 pb-3 text-lg font-bold text-center ${!isLoginView ? 'text-[#EF7669] border-b-2 border-[#EF7669]' : 'text-slate-500'}`}
+                        style={{ ...buttonStyle, color: !isLoginView ? 'var(--color-accent)' : 'var(--color-sub-data)', borderBottom: !isLoginView ? '2px solid var(--color-accent)' : 'none' }}
                     >
                         Criar Conta
                     </button>
                 </div>
                 
-                <h2 className="text-2xl font-bold text-slate-800 text-center mb-2">
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, textAlign: 'center', marginBottom: '0.5rem' }}>
                     {isLoginView ? 'Bem-vindo de volta!' : 'Crie sua conta'}
                 </h2>
-                <p className="text-slate-500 text-center mb-6">
+                <p style={{ color: 'var(--color-sub-data)', textAlign: 'center', marginBottom: '1.5rem' }}>
                     {isLoginView ? 'Faça login para acessar seus projetos.' : 'Salve seu progresso e compartilhe com outros.'}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {!isLoginView && (
                          <div>
-                            <label className="text-sm font-medium text-slate-500 block mb-1">Nome</label>
-                            <input type="text" value={name} onChange={e => setName(e.target.value)} className={commonInputClass} placeholder="Seu nome completo"/>
+                            <label className="data-label" style={{ marginBottom: '0.25rem' }}>Nome</label>
+                            <input type="text" value={name} onChange={e => setName(e.target.value)} className="input-field" placeholder="Seu nome completo"/>
                         </div>
                     )}
                     <div>
-                        <label className="text-sm font-medium text-slate-500 block mb-1">Email</label>
-                        <input type="email" value={email} onChange={e => setEmail(e.target.value)} className={commonInputClass} placeholder="voce@email.com"/>
+                        <label className="data-label" style={{ marginBottom: '0.25rem' }}>Email</label>
+                        <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="input-field" placeholder="voce@email.com"/>
                     </div>
                      <div>
-                        <label className="text-sm font-medium text-slate-500 block mb-1">Senha</label>
-                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} className={commonInputClass} placeholder="••••••••"/>
+                        <label className="data-label" style={{ marginBottom: '0.25rem' }}>Senha</label>
+                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="input-field" placeholder="••••••••"/>
                     </div>
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                    <button type="submit" className={`${commonButtonClass} bg-[#EF7669] text-white hover:bg-[#E65F4C]`}>
+                    {error && <p className="text-danger" style={{ fontSize: '0.875rem', color: 'var(--color-danger)' }}>{error}</p>}
+                    <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
                         {isLoginView ? 'Entrar' : 'Criar Conta'}
                     </button>
                 </form>

@@ -14,18 +14,20 @@ const Contact: React.FC = () => {
         setSubmitted(true);
     };
     
-    const commonInputClass = "w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#EF7669] focus:border-[#EF7669] transition-colors";
+    // Classes CSS puras
+    const successIconStyle = { width: '4rem', height: '4rem', margin: '0 auto', color: 'var(--color-success)' };
 
     if (submitted) {
         return (
-            <div className="max-w-lg mx-auto mt-10 animate-fade-in text-center">
-                 <div className="bg-white p-8 rounded-2xl shadow-lg">
-                    <CheckCircleIcon className="h-16 w-16 mx-auto text-green-500" />
-                    <h2 className="text-2xl font-bold text-slate-800 mt-4">Mensagem Enviada!</h2>
-                    <p className="text-slate-500 mt-2">Obrigado pelo seu contato. Responderemos em breve.</p>
+            <div className="animate-fade-in" style={{ maxWidth: '500px', margin: '2.5rem auto', textAlign: 'center' }}>
+                 <div className="card" style={{ padding: '2rem' }}>
+                    <CheckCircleIcon style={successIconStyle} />
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-dark)', marginTop: '1rem' }}>Mensagem Enviada!</h2>
+                    <p style={{ color: 'var(--color-sub-data)', marginTop: '0.5rem' }}>Obrigado pelo seu contato. Responderemos em breve.</p>
                      <button 
                         onClick={() => setSubmitted(false)} 
-                        className="mt-6 w-full py-3 px-4 rounded-lg font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300"
+                        className="btn-secondary"
+                        style={{ marginTop: '1.5rem', width: '100%' }}
                     >
                         Enviar nova mensagem
                     </button>
@@ -35,25 +37,25 @@ const Contact: React.FC = () => {
     }
 
     return (
-        <div className="max-w-lg mx-auto mt-10 animate-fade-in">
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-                <h2 className="text-3xl font-bold text-slate-800 text-center mb-2">Entre em Contato</h2>
-                <p className="text-slate-500 text-center mb-8">Tem alguma dúvida, sugestão ou feedback? Adoraríamos ouvir você!</p>
+        <div className="animate-fade-in" style={{ maxWidth: '500px', margin: '2.5rem auto' }}>
+            <div className="card" style={{ padding: '2rem' }}>
+                <h2 style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--color-text-dark)', textAlign: 'center', marginBottom: '0.5rem' }}>Entre em Contato</h2>
+                <p style={{ color: 'var(--color-sub-data)', textAlign: 'center', marginBottom: '2rem' }}>Tem alguma dúvida, sugestão ou feedback? Adoraríamos ouvir você!</p>
                 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="name" className="text-sm font-medium text-slate-500 block mb-1">Seu Nome</label>
-                        <input id="name" type="text" value={name} onChange={e => setName(e.target.value)} className={commonInputClass} placeholder="Fulano de Tal" required />
+                        <label htmlFor="name" className="data-label" style={{ marginBottom: '0.25rem' }}>Seu Nome</label>
+                        <input id="name" type="text" value={name} onChange={e => setName(e.target.value)} className="input-field" placeholder="Fulano de Tal" required />
                     </div>
                      <div>
-                        <label htmlFor="email" className="text-sm font-medium text-slate-500 block mb-1">Seu E-mail</label>
-                        <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} className={commonInputClass} placeholder="fulano@email.com" required />
+                        <label htmlFor="email" className="data-label" style={{ marginBottom: '0.25rem' }}>Seu E-mail</label>
+                        <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} className="input-field" placeholder="fulano@email.com" required />
                     </div>
                      <div>
-                        <label htmlFor="message" className="text-sm font-medium text-slate-500 block mb-1">Sua Mensagem</label>
-                        <textarea id="message" value={message} onChange={e => setMessage(e.target.value)} rows={5} className={commonInputClass} placeholder="Deixe sua mensagem aqui..." required />
+                        <label htmlFor="message" className="data-label" style={{ marginBottom: '0.25rem' }}>Sua Mensagem</label>
+                        <textarea id="message" value={message} onChange={e => setMessage(e.target.value)} rows={5} className="input-field" placeholder="Deixe sua mensagem aqui..." required style={{ resize: 'vertical' }} />
                     </div>
-                    <button type="submit" className="w-full py-3 px-4 rounded-lg font-semibold bg-[#EF7669] text-white hover:bg-[#E65F4C] transition-colors shadow">
+                    <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '1.5rem' }}>
                         Enviar Mensagem
                     </button>
                 </form>

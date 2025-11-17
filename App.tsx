@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { db } from './firebase';
 import { InitialCost, Room, PurchaseItem, ChecklistSection, RecurringCost, ChecklistItem, User } from './types';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -11,7 +10,7 @@ import MovingChecklist from './components/MovingChecklist';
 import Auth from './components/Auth';
 import Contact from './components/Contact';
 import ShareModal from './components/ShareModal';
-
+// import { db } from './firebase'; // Descomente esta linha e a lógica do Firestore quando o setup estiver completo
 
 
 export type View = 'dashboard' | 'costs' | 'rooms' | 'purchases' | 'bills' | 'journey' | 'auth' | 'contact';
@@ -181,7 +180,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-200">
+    // Usa a classe CSS "min-h-screen" se necessário, mas o body já tem o fundo
+    <div> 
       <Header 
         currentView={currentView} 
         setCurrentView={setCurrentView}
@@ -189,7 +189,8 @@ const App: React.FC = () => {
         onLogout={handleLogout}
         onShare={() => setShareModalOpen(true)}
       />
-      <main className="container mx-auto p-4 md:p-8">
+      {/* Usa a classe CSS "container" para o layout principal */}
+      <main className="container">
         {renderView()}
       </main>
       {isShareModalOpen && <ShareModal onClose={() => setShareModalOpen(false)} projectName={projectName}/>}

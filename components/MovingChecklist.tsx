@@ -9,30 +9,34 @@ interface MovingChecklistProps {
 
 const MovingChecklist: React.FC<MovingChecklistProps> = ({ sections, onToggle }) => {
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="text-left">
-        <h2 className="text-3xl font-bold text-slate-800">Sua Jornada</h2>
+    <div className="animate-fade-in" style={{ maxWidth: '800px', margin: '2.5rem auto' }}>
+      <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-primary)' }}>Sua Jornada</h2>
       </div>
       
       <div className="space-y-6">
         {sections.map(section => (
-          <div key={section.id}>
-            <h3 className="text-lg font-bold text-slate-500 mb-3">{section.title}</h3>
+          <div key={section.id} className="card">
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '1rem' }}>{section.title}</h3>
             <div className="space-y-3">
               {section.items.map(item => (
                 <div 
                   key={item.id} 
                   onClick={() => onToggle(item.id)}
                   className={`flex items-center p-4 rounded-xl transition-all cursor-pointer ${
-                    item.completed ? 'bg-sky-100' : 'bg-slate-100 hover:bg-slate-200'
+                    item.completed ? 'completed-item' : 'pending-item'
                   }`}
+                  style={{ 
+                    backgroundColor: item.completed ? '#EBF2FA' : 'var(--color-background-card)', 
+                    borderLeft: item.completed ? '4px solid var(--color-accent)' : '1px solid #E0E0E0'
+                  }}
                 >
-                   <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mr-4 ${
-                       item.completed ? 'bg-sky-200' : 'border-2 border-slate-300'
-                   }`}>
-                    {item.completed && <CheckIcon className="w-4 h-4 text-sky-700" />}
+                   <div style={{ flexShrink: 0, width: '1.5rem', height: '1.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '1rem', 
+                       backgroundColor: item.completed ? 'var(--color-accent)' : 'white', border: item.completed ? 'none' : '2px solid var(--color-sub-data)'
+                   }}>
+                    {item.completed && <CheckIcon style={{ width: '1rem', height: '1rem', color: 'white' }} />}
                   </div>
-                  <span className={`text-slate-700 ${item.completed ? 'opacity-70' : ''}`}>
+                  <span style={{ color: 'var(--color-text-dark)', opacity: item.completed ? 0.6 : 1 }}>
                     {item.text}
                   </span>
                 </div>
@@ -42,9 +46,10 @@ const MovingChecklist: React.FC<MovingChecklistProps> = ({ sections, onToggle })
         ))}
       </div>
       
-      <div className="pt-4">
+      <div style={{ paddingTop: '1rem', marginTop: '2rem' }}>
         <button
-            className="w-full bg-[#EF7669] text-white font-bold py-4 px-8 rounded-xl text-lg tracking-widest hover:bg-opacity-90 transition-all transform hover:scale-105"
+            className="btn-primary"
+            style={{ width: '100%', padding: '1rem 2rem', fontSize: '1.125rem', letterSpacing: '0.1em' }}
         >
             Marcar como Concluído
         </button>

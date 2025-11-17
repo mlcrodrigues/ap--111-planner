@@ -1,26 +1,193 @@
-/* Definição da Fonte (Avenir Next) e Cores do Projeto */
-body {
-    /* O navegador usará Avenir Next, Avenir, ou a sans-serif padrão */
-    font-family: 'Avenir Next', 'Avenir', sans-serif;
-    background-color: #EBF2FA; /* Cinza Azulado Claro (Fundo Principal) */
-}
-
-/* Variáveis CSS para facilitar o uso das cores */
 :root {
-    --color-primary: #1B4965; /* Azul Marinho Sólido */
-    --color-accent: #FF6B6B; /* Coral Suave (CTA) */
+    --color-primary: #1B4965; /* Azul Marinho Sólido (Seriedade) */
+    --color-accent: #FF6B6B; /* Coral Suave (Jovialidade / CTA) */
     --color-text-dark: #222222;
     --color-background-card: #FFFFFF; 
+    --color-background-main: #EBF2FA; /* Cinza Azulado Claro */
+    --color-sub-data: #6C7A89; /* Cinza para dados secundários */
+    --color-success: #28a745; /* Verde para sucesso */
+    --color-warning: #ffc107; /* Amarelo para atenção */
+    --color-danger: #dc3545; /* Vermelho para perigo */
 }
 
-/* Estilos de Elementos Comuns (Substituindo classes Tailwind) */
+body {
+    font-family: 'Avenir Next', 'Avenir', sans-serif;
+    background-color: var(--color-background-main); 
+    color: var(--color-text-dark); 
+    margin: 0; 
+    padding: 0;
+    line-height: 1.5;
+}
+
+/* --- 2. LAYOUT GERAL E UTILITÁRIOS --- */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 1rem 1rem;
 }
 
-/* Classe para Botões Principais (CTA) */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Utilitários Flex (substitui classes flex/gap) */
+.flex { display: flexbox; }
+.flex-group { display: flexbox; flex-wrap: wrap; }
+.flex-col { flex-direction: column; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+.space-y-4 > * { margin-top: 1rem; margin-bottom: 1rem; }
+.space-y-6 > * { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+
+
+/* --- 3. HEADER E NAVEGAÇÃO --- */
+.flex-group {
+    display: flex;
+    flex-wrap: wrap;
+    column: row;   
+    gap: 1rem;
+}   
+
+.app-header {
+    background-color: var(--color-primary); 
+    color: white; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    position: relative;
+    width: 100%; 
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo-accent {
+    color: var(--color-accent); 
+    font-weight: 400; 
+    margin-left: 0.25rem;
+}
+
+/* Navegação Desktop */
+.nav-links-desktop {
+    display: none;
+    gap: 1.5rem;
+}
+
+.nav-links-desktop button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0.25rem 0;
+    font-weight: 500;
+}
+
+.nav-links-desktop button:hover, .nav-links-desktop button.active {
+    color: var(--color-accent);
+}
+
+/* Menu Toggle (Mobile) */
+.mobile-menu-toggle {
+    display: block; 
+}
+
+.header-actions {
+    display: none; 
+}
+
+/* Navegação Mobile (Aberta) */
+.nav-links-mobile button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    padding: 0.5rem 0;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.2s;
+}
+
+.nav-links-mobile button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Media Query para Desktop (a partir de 768px) --- */
+@media (min-width: 768px) {
+    .nav-links-desktop {
+        display: flex; 
+    }
+    .mobile-menu-toggle {
+        display: none; 
+    }
+    .header-actions {
+        display: flex; 
+    }
+    .container {
+        padding: 1rem 4rem; 
+    }
+    .app-header .container {
+        padding: 0 0; /* Remove padding extra dentro do container do header no desktop */
+    }
+    .app-header {
+        padding: 1rem 4rem; /* Aplica o padding externo aqui */
+    }
+}
+
+/* --- 4. DASHBOARD GRID E CARDS --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 2rem; 
+    margin-top: 2rem;
+}
+
+.card {
+    background-color: var(--color-background-card);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.title-card {
+    grid-column: 1 / -1; 
+    background-color: var(--color-primary) !important; 
+    color: white !important;
+}
+
+.section-title {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* ... (Restante do CSS) ... */
+
+/* --- 5. COMPONENTES DE FORMS E BOTÕES --- */
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.5);
+}
+
 .btn-primary {
     background-color: var(--color-accent);
     color: white;
@@ -28,34 +195,26 @@ body {
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s;
     border: none;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
 }
 
-.btn-primary:hover {
-    background-color: #e56060; /* Coral ligeiramente mais escuro */
+.btn-secondary {
+    background-color: #F3F4F6; 
+    color: var(--color-text-dark);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
 }
 
-/* Estilo para Cards/Containers de Informação */
-.card {
-    background-color: var(--color-background-card);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
-}
-
-/* Títulos de Seção */
-.section-title {
-    color: var(--color-primary);
-    font-size: 1.5rem;
-    font-weight: 700; /* Bold na Avenir Next */
-    margin-bottom: 1rem;
-}
-
-/* Headers do App */
-.app-header {
-    background-color: var(--color-primary);
-    color: white;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.btn-secondary:hover {
+    background-color: #E5E7EB;
 }

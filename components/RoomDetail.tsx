@@ -46,10 +46,10 @@ const RoomDetail: React.FC<RoomDetailProps> = ({ room, onUpdate, onRemove }) => 
   const formatCurrency = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300">
-      <div className="w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+    <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+      <div className="flex justify-between items-center p-4 cursor-pointer" style={{ backgroundColor: '#F9FAFB', borderBottom: isOpen ? '1px solid #E5E7EB' : 'none' }} onClick={() => setIsOpen(!isOpen)}>
         <div className="flex items-center gap-4 flex-grow flex-wrap">
-            <h3 className="text-xl font-bold text-slate-800">{room.name}</h3>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-dark)' }}>{room.name}</h3>
             <div className="flex items-center gap-2">
                 <input
                     id={`sqm-${room.id}`}
@@ -57,96 +57,104 @@ const RoomDetail: React.FC<RoomDetailProps> = ({ room, onUpdate, onRemove }) => 
                     value={room.squareMeters || ''}
                     onChange={(e) => onUpdate(room.id, 'squareMeters', parseFloat(e.target.value) || 0)}
                     onClick={(e) => e.stopPropagation()}
-                    className="w-24 p-1.5 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-[#EF7669] focus:border-[#EF7669]"
+                    className="input-field"
+                    style={{ width: '6rem', padding: '0.4rem', fontSize: '0.875rem' }}
                     placeholder="0.00"
                 />
-                <label htmlFor={`sqm-${room.id}`} className="text-sm font-medium text-slate-600">
+                <label htmlFor={`sqm-${room.id}`} className="data-label">
                     m²
                 </label>
             </div>
         </div>
         <div className="flex items-center gap-2">
-            <button onClick={(e) => { e.stopPropagation(); onRemove(); }} className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100 transition-colors">
-                <TrashIcon />
+            <button onClick={(e) => { e.stopPropagation(); onRemove(); }} className="icon-btn-remove">
+                <TrashIcon style={{ width: '1.25rem', height: '1.25rem' }} />
             </button>
-            <ChevronDownIcon className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+            <ChevronDownIcon style={{ width: '1.5rem', height: '1.5rem', transition: 'transform 0.3s', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </div>
       </div>
 
       {isOpen && (
-        <>
-          <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-slow">
+        <div className="p-6" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
             {/* Repairs */}
-            <div className="col-span-1 space-y-3 bg-slate-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-slate-600">Reparos/Tarefas</h4>
-              {room.repairs.map(item => (
-                <div key={item.id} className="flex items-center justify-between bg-white p-2 rounded">
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" checked={item.completed} onChange={() => toggleRepair(item.id)} className="form-checkbox h-5 w-5 text-[#EF7669] rounded focus:ring-[#E65F4C]" />
-                    <span className={item.completed ? 'line-through text-slate-400' : ''}>{item.description}</span>
-                  </label>
-                  <button onClick={() => handleRemoveItem('repairs', item.id)} className="text-red-400 hover:text-red-600"><TrashIcon className="h-4 w-4" /></button>
-                </div>
-              ))}
-              <form onSubmit={e => { e.preventDefault(); handleAddItem('repairs', { id: Date.now().toString(), description: newRepair, completed: false }); setNewRepair(''); }} className="flex gap-2">
-                <input value={newRepair} onChange={e => setNewRepair(e.target.value)} className="flex-grow p-1 border rounded text-sm" placeholder="Nova tarefa" />
-                <button type="submit" className="bg-[#EF7669] text-white rounded p-1"><PlusIcon className="h-4 w-4"/></button>
+            <div className="card" style={{ padding: '1rem', backgroundColor: '#F9FAFB', boxShadow: 'none' }}>
+              <h4 style={{ fontWeight: 600, color: 'var(--color-sub-data)', marginBottom: '0.75rem' }}>Reparos/Tarefas</h4>
+              <div className="space-y-3">
+                  {room.repairs.map(item => (
+                    <div key={item.id} className="flex justify-between items-center card" style={{ padding: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                      <label className="flex items-center gap-2" style={{ cursor: 'pointer' }}>
+                        <input type="checkbox" checked={item.completed} onChange={() => toggleRepair(item.id)} style={{ width: '1.25rem', height: '1.25rem', color: 'var(--color-accent)' }} />
+                        <span style={{ textDecoration: item.completed ? 'line-through' : 'none', color: item.completed ? 'var(--color-sub-data)' : 'var(--color-text-dark)' }}>{item.description}</span>
+                      </label>
+                      <button onClick={() => handleRemoveItem('repairs', item.id)} className="icon-btn-remove" style={{ padding: '0.25rem' }}><TrashIcon style={{ width: '1rem', height: '1rem' }} /></button>
+                    </div>
+                  ))}
+              </div>
+              <form onSubmit={e => { e.preventDefault(); handleAddItem('repairs', { id: Date.now().toString(), description: newRepair, completed: false }); setNewRepair(''); }} className="flex gap-2" style={{ marginTop: '1rem' }}>
+                <input value={newRepair} onChange={e => setNewRepair(e.target.value)} className="input-field" style={{ flexGrow: 1, padding: '0.5rem' }} placeholder="Nova tarefa" />
+                <button type="submit" className="btn-primary" style={{ padding: '0.5rem', width: '2rem', height: '2rem' }}><PlusIcon style={{ width: '1rem', height: '1rem' }}/></button>
               </form>
             </div>
 
             {/* Materials */}
-            <div className="col-span-1 space-y-3 bg-slate-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-slate-600">Materiais</h4>
-              {room.materials.map(item => (
-                <div key={item.id} className="flex items-center justify-between bg-white p-2 rounded">
-                  <span>{item.name} ({item.quantity}x {formatCurrency(item.unitPrice)})</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">{formatCurrency(item.quantity * item.unitPrice)}</span>
-                    <button onClick={() => handleRemoveItem('materials', item.id)} className="text-red-400 hover:text-red-600"><TrashIcon className="h-4 w-4" /></button>
-                  </div>
-                </div>
-              ))}
-               <form onSubmit={e => { e.preventDefault(); handleAddItem('materials', { id: Date.now().toString(), ...newMaterial }); setNewMaterial({ name: '', quantity: 1, unitPrice: 0 }); }} className="grid grid-cols-3 gap-2 text-sm">
-                  <input value={newMaterial.name} onChange={e => setNewMaterial({...newMaterial, name: e.target.value})} className="col-span-3 p-1 border rounded" placeholder="Item" />
-                  <input value={newMaterial.quantity} onChange={e => setNewMaterial({...newMaterial, quantity: parseInt(e.target.value) || 1})} type="number" className="p-1 border rounded" placeholder="Qtd" />
-                  <input value={newMaterial.unitPrice} onChange={e => setNewMaterial({...newMaterial, unitPrice: parseFloat(e.target.value) || 0})} type="number" className="p-1 border rounded" placeholder="Preço" />
-                  <button type="submit" className="bg-[#EF7669] text-white rounded p-1 flex justify-center items-center"><PlusIcon className="h-4 w-4"/></button>
+            <div className="card" style={{ padding: '1rem', backgroundColor: '#F9FAFB', boxShadow: 'none' }}>
+              <h4 style={{ fontWeight: 600, color: 'var(--color-sub-data)', marginBottom: '0.75rem' }}>Materiais</h4>
+              <div className="space-y-3">
+                  {room.materials.map(item => (
+                    <div key={item.id} className="flex justify-between items-center card" style={{ padding: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                      <div style={{ flexGrow: 1 }}>
+                        <div style={{ fontWeight: 600 }}>{item.name}</div>
+                        <div className="data-label" style={{ fontSize: '0.75rem' }}>{item.quantity}x {formatCurrency(item.unitPrice)}</div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span style={{ fontWeight: 700 }}>{formatCurrency(item.quantity * item.unitPrice)}</span>
+                        <button onClick={() => handleRemoveItem('materials', item.id)} className="icon-btn-remove" style={{ padding: '0.25rem' }}><TrashIcon style={{ width: '1rem', height: '1rem' }} /></button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+               <form onSubmit={e => { e.preventDefault(); handleAddItem('materials', { id: Date.now().toString(), ...newMaterial }); setNewMaterial({ name: '', quantity: 1, unitPrice: 0 }); }} className="flex flex-wrap gap-2" style={{ marginTop: '1rem' }}>
+                  <input value={newMaterial.name} onChange={e => setNewMaterial({...newMaterial, name: e.target.value})} className="input-field" style={{ width: '100%', padding: '0.5rem', fontSize: '0.875rem' }} placeholder="Item" />
+                  <input value={newMaterial.quantity} onChange={e => setNewMaterial({...newMaterial, quantity: parseInt(e.target.value) || 1})} type="number" className="input-field" style={{ flex: 1, padding: '0.5rem', fontSize: '0.875rem' }} placeholder="Qtd" />
+                  <input value={newMaterial.unitPrice} onChange={e => setNewMaterial({...newMaterial, unitPrice: parseFloat(e.target.value) || 0})} type="number" className="input-field" style={{ flex: 1, padding: '0.5rem', fontSize: '0.875rem' }} placeholder="Preço" />
+                  <button type="submit" className="btn-primary" style={{ padding: '0.5rem', width: '2rem', height: '2rem' }}><PlusIcon style={{ width: '1rem', height: '1rem' }}/></button>
               </form>
-              <div className="text-right font-bold pt-2 border-t">Total: {formatCurrency(totalMaterials)}</div>
+              <div style={{ textAlign: 'right', fontWeight: 700, paddingTop: '0.5rem', borderTop: '1px solid #E0E0E0' }}>Total: {formatCurrency(totalMaterials)}</div>
             </div>
             
             {/* Labor */}
-            <div className="col-span-1 space-y-3 bg-slate-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-slate-600">Mão de Obra</h4>
-              {room.labor.map(item => (
-                <div key={item.id} className="flex items-center justify-between bg-white p-2 rounded">
-                  <div>
-                    <div className="font-medium">{item.providerName}</div>
-                    <div className="text-sm text-slate-500">{item.phone}</div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">{formatCurrency(item.price)}</span>
-                    <button onClick={() => handleRemoveItem('labor', item.id)} className="text-red-400 hover:text-red-600"><TrashIcon className="h-4 w-4" /></button>
-                  </div>
-                </div>
-              ))}
-               <form onSubmit={e => { e.preventDefault(); handleAddItem('labor', { id: Date.now().toString(), ...newLabor }); setNewLabor({ providerName: '', phone: '', price: 0 }); }} className="space-y-2 text-sm">
-                  <input value={newLabor.providerName} onChange={e => setNewLabor({...newLabor, providerName: e.target.value})} className="w-full p-1 border rounded" placeholder="Prestador" />
-                  <input value={newLabor.phone} onChange={e => setNewLabor({...newLabor, phone: e.target.value})} className="w-full p-1 border rounded" placeholder="Telefone" />
+            <div className="card" style={{ padding: '1rem', backgroundColor: '#F9FAFB', boxShadow: 'none' }}>
+              <h4 style={{ fontWeight: 600, color: 'var(--color-sub-data)', marginBottom: '0.75rem' }}>Mão de Obra</h4>
+              <div className="space-y-3">
+                  {room.labor.map(item => (
+                    <div key={item.id} className="flex justify-between items-center card" style={{ padding: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                      <div style={{ flexGrow: 1 }}>
+                        <div style={{ fontWeight: 600 }}>{item.providerName}</div>
+                        <div className="data-label" style={{ fontSize: '0.75rem' }}>{item.phone}</div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span style={{ fontWeight: 700 }}>{formatCurrency(item.price)}</span>
+                        <button onClick={() => handleRemoveItem('labor', item.id)} className="icon-btn-remove" style={{ padding: '0.25rem' }}><TrashIcon style={{ width: '1rem', height: '1rem' }} /></button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+               <form onSubmit={e => { e.preventDefault(); handleAddItem('labor', { id: Date.now().toString(), ...newLabor }); setNewLabor({ providerName: '', phone: '', price: 0 }); }} className="space-y-2" style={{ marginTop: '1rem' }}>
+                  <input value={newLabor.providerName} onChange={e => setNewLabor({...newLabor, providerName: e.target.value})} className="input-field" style={{ width: '100%', padding: '0.5rem', fontSize: '0.875rem' }} placeholder="Prestador" />
+                  <input value={newLabor.phone} onChange={e => setNewLabor({...newLabor, phone: e.target.value})} className="input-field" style={{ width: '100%', padding: '0.5rem', fontSize: '0.875rem' }} placeholder="Telefone" />
                   <div className="flex gap-2">
-                  <input value={newLabor.price} onChange={e => setNewLabor({...newLabor, price: parseFloat(e.target.value) || 0})} type="number" className="flex-grow p-1 border rounded" placeholder="Preço" />
-                  <button type="submit" className="bg-[#EF7669] text-white rounded p-1 flex justify-center items-center w-8"><PlusIcon className="h-4 w-4"/></button>
+                  <input value={newLabor.price} onChange={e => setNewLabor({...newLabor, price: parseFloat(e.target.value) || 0})} type="number" className="input-field" style={{ flexGrow: 1, padding: '0.5rem', fontSize: '0.875rem' }} placeholder="Preço" />
+                  <button type="submit" className="btn-primary" style={{ padding: '0.5rem', width: '2rem', height: '2rem' }}><PlusIcon style={{ width: '1rem', height: '1rem' }}/></button>
                   </div>
               </form>
-              <div className="text-right font-bold pt-2 border-t">Total: {formatCurrency(totalLabor)}</div>
+              <div style={{ textAlign: 'right', fontWeight: 700, paddingTop: '0.5rem', borderTop: '1px solid #E0E0E0' }}>Total: {formatCurrency(totalLabor)}</div>
             </div>
           </div>
-          <div className="p-4 bg-slate-100 flex justify-between items-center font-bold border-t">
-              <span className="text-slate-600 text-lg">Total do Cômodo:</span>
-              <span className="text-xl text-[#EF7669]">{formatCurrency(totalRoomCost)}</span>
-          </div>
-        </>
       )}
+      <div style={{ padding: '1rem', backgroundColor: '#E5E7EB', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 700, borderTop: '1px solid #D1D5DB' }}>
+          <span style={{ color: 'var(--color-primary)', fontSize: '1.125rem' }}>Total do Cômodo:</span>
+          <span style={{ fontSize: '1.25rem', color: 'var(--color-accent)' }}>{formatCurrency(totalRoomCost)}</span>
+      </div>
     </div>
   );
 };

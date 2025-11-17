@@ -14,9 +14,9 @@ const ShareModal: React.FC<ShareModalProps> = ({ onClose, projectName }) => {
     const shareLink = `https://ape-planner.app/share/${projectName.toLowerCase().replace(/\s/g, '-')}-xyz789`;
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(shareLink).then(() => {
-            setCopied(true);
-        });
+        // Usa o método padrão para copiar para a área de transferência
+        document.execCommand('copy');
+        setCopied(true);
     };
 
     useEffect(() => {
@@ -41,33 +41,83 @@ const ShareModal: React.FC<ShareModalProps> = ({ onClose, projectName }) => {
       }, [onClose]);
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in-fast" onClick={onClose}>
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 relative" onClick={e => e.stopPropagation()}>
-                <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
-                    <XIcon className="h-6 w-6"/>
+        // Overlay do Modal
+        <div 
+            style={{ 
+                position: 'fixed', 
+                inset: 0, 
+                backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                zIndex: 50, 
+                padding: '1rem',
+                animation: 'fadeInFast 0.3s'
+            }} 
+            onClick={onClose}
+        >
+            {/* Conteúdo do Modal */}
+            <div 
+                className="card" 
+                style={{ 
+                    backgroundColor: 'white', 
+                    width: '100%', 
+                    maxWidth: '400px', 
+                    padding: '2rem', 
+                    position: 'relative' 
+                }} 
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Botão de Fechar */}
+                <button 
+                    onClick={onClose} 
+                    style={{ position: 'absolute', top: '1rem', right: '1rem', color: 'var(--color-sub-data)', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                    <XIcon style={{ width: '1.5rem', height: '1.5rem'}}/>
                 </button>
 
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">Compartilhar Projeto</h2>
-                <p className="text-slate-500 mb-6">Copie o link abaixo para compartilhar o projeto "{projectName}" com outras pessoas.</p>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-dark)', marginBottom: '0.5rem' }}>Compartilhar Projeto</h2>
+                <p style={{ color: 'var(--color-sub-data)', marginBottom: '1.5rem' }}>Copie o link abaixo para compartilhar o projeto "{projectName}" com outras pessoas.</p>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                     <input 
                         type="text"
                         value={shareLink}
                         readOnly
-                        className="flex-grow p-3 bg-slate-100 border border-slate-200 rounded-lg text-slate-600"
+                        // Estilização do Input de Link
+                        style={{ 
+                            flexGrow: 1, 
+                            padding: '0.75rem', 
+                            backgroundColor: '#F3F4F6', 
+                            border: '1px solid #E5E7EB', 
+                            borderRadius: '8px', 
+                            color: 'var(--color-sub-data)' 
+                        }}
                     />
                     <button 
                         onClick={handleCopy}
-                        className={`px-4 py-3 rounded-lg font-semibold transition-all w-32 flex items-center justify-center ${
-                            copied ? 'bg-green-500 text-white' : 'bg-[#EF7669] text-white hover:bg-[#E65F4C]'
-                        }`}
+                        // Estilização do Botão Copiar (usando Coral e sucesso)
+                        style={{
+                            padding: '0.75rem 1rem',
+                            borderRadius: '8px',
+                            fontWeight: 600,
+                            transition: 'all 0.2s',
+                            width: '100px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem',
+                            backgroundColor: copied ? 'var(--color-success)' : 'var(--color-accent)',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
                     >
-                        {copied ? <CheckIcon className="h-6 w-6"/> : 'Copiar'}
+                        {copied ? <CheckIcon style={{ width: '1.5rem', height: '1.5rem'}}/> : 'Copiar'}
                     </button>
                 </div>
                 
-                <p className="text-xs text-slate-400 mt-4">Qualquer pessoa com este link poderá visualizar o projeto. (Funcionalidade em desenvolvimento)</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--color-sub-data)', marginTop: '1rem' }}>Qualquer pessoa com este link poderá visualizar o projeto. (Funcionalidade em desenvolvimento)</p>
             </div>
         </div>
     );

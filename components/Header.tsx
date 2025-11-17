@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { View } from '../App';
 import { User } from '../types';
 import { MenuIcon } from './icons/MenuIcon';
-import { XIcon } from './icons/XIcon';
 import { ShareIcon } from './icons/ShareIcon';
 import { UserIcon } from './icons/UserIcon';
 import { LogoutIcon } from './icons/LogoutIcon';
+// Importa o novo componente SvgLogo
+import SvgLogo from './SvgLogo';
 
 
 interface HeaderProps {
@@ -31,26 +32,22 @@ const NavLink: React.FC<{
   label: string;
   currentView: View;
   onClick: () => void;
-  isMobile?: boolean;
-}> = ({ view, label, currentView, onClick, isMobile = false }) => (
+}> = ({ view, label, currentView, onClick }) => (
   <button
     onClick={onClick}
-    className={`font-semibold tracking-wide transition-colors duration-200 ${
-      isMobile
-        ? `w-full text-left p-4 text-lg ${currentView === view ? 'bg-[#202945] text-[#EF7669]' : 'text-slate-700 hover:bg-slate-200'}`
-        : `px-4 py-2 rounded-md text-sm ${currentView === view ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/10'}`
-    }`}
+    className={`${currentView === view ? 'active' : ''}`}
   >
     {label}
   </button>
 );
 
-const AppTitle: React.FC = () => (
-    <div>
-        <h1 className="text-2xl font-bold text-white tracking-wider">Apê</h1>
-        <p className="text-3xl font-bold text-[#EF7669] tracking-tighter">111</p>
-    </div>
-);
+// O componente AppTitle é substituído pelo SvgLogo
+// const AppTitle: React.FC = () => (
+//     <div className="flex items-center">
+//         <h1 style={{ fontSize: '1.8rem', fontWeight: 700, color: 'white' }}>Apê</h1>
+//         <span className="logo-accent" style={{ fontSize: '1.8rem', fontWeight: 400 }}>111</span>
+//     </div>
+// );
 
 
 const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLogout, onShare }) => {
@@ -62,11 +59,14 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
   };
 
   return (
-    <header className="bg-[#202945] sticky top-0 z-50 shadow-md">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="flex justify-between items-center h-20">
-          <AppTitle />
-          <nav className="hidden md:flex items-center space-x-2">
+    <header className="app-header" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+      {/* O container agora envolve todo o conteúdo do header */}
+      <div className="container"> 
+        <div className="header-content"> {/* Usa a nova classe para alinhar o conteúdo */}
+          
+          <SvgLogo /> {/* Renderiza o logo SvgLogo */}
+          
+          <nav className="nav-links-desktop"> {/* Links para desktop */}
             {navItems.map(item => (
               <NavLink
                 key={item.view}
@@ -78,88 +78,79 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="header-actions flex items-center gap-4"> {/* Ações de usuário/share */}
             {user ? (
                  <>
-                    <button onClick={onShare} className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-all bg-slate-200 text-slate-600 hover:bg-slate-300">
-                        <ShareIcon className="h-5 w-5" />
-                        <span>Compartilhar</span>
+                    <button onClick={onShare} className="btn-secondary flex items-center gap-2" style={{ padding: '0.5rem 1rem' }}>
+                        <ShareIcon style={{ width: '1.25rem', height: '1.25rem' }} />
+                        <span className="hidden-on-small-mobile">Compartilhar</span>
                     </button>
-                    <div className="p-2 rounded-full bg-slate-500 text-white">
-                        <UserIcon className="h-6 w-6" />
+                    <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+                        <UserIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
                     </div>
-                     <button onClick={onLogout} className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10">
-                        <LogoutIcon className="h-6 w-6" />
+                     <button onClick={onLogout} className="icon-btn-remove" style={{ color: 'white', background: 'none' }}>
+                        <LogoutIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
                     </button>
                 </>
             ) : (
                 <button
                     onClick={() => setCurrentView('auth')}
-                    className="bg-[#EF7669] text-white font-semibold px-4 py-2 rounded-lg hover:bg-[#E65F4C] shadow transition-transform transform hover:scale-105"
+                    className="btn-primary"
+                    style={{ padding: '0.5rem 1rem' }}
                 >
                     Login
                 </button>
             )}
           </div>
 
-          <div className="md:hidden">
+          {/* Menu Móvel (Toggle) */}
+          <div className="mobile-menu-toggle"> 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white/80 hover:text-white focus:outline-none"
-              aria-label="Abrir menu"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <MenuIcon className="h-8 w-8" />
+              <MenuIcon style={{ width: '2rem', height: '2rem', color: 'white' }} />
             </button>
           </div>
         </div>
       </div>
 
-      <div
-        className={`fixed inset-0 z-50 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}
-      >
-        <div className="fixed inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)}></div>
-        <div className="relative w-72 max-w-[80vw] h-full bg-slate-100 shadow-xl flex flex-col">
-            <div className="flex justify-between items-center p-4 border-b">
-                 <AppTitle />
-                <button onClick={() => setIsMenuOpen(false)} className="text-slate-600 hover:text-slate-900" aria-label="Fechar menu">
-                  <XIcon className="h-7 w-7" />
+      {/* Menu Aberto Móvel */}
+      {isMenuOpen && (
+          <nav className="nav-links-mobile" style={{ 
+            position: 'absolute', 
+            top: '100%', 
+            left: 0, 
+            right: 0, 
+            backgroundColor: 'var(--color-primary)', 
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', 
+            padding: '1rem 2rem', 
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem'
+          }}>
+            {navItems.map(item => (
+              <NavLink
+                key={item.view}
+                view={item.view}
+                label={item.label}
+                currentView={currentView}
+                onClick={() => handleNavClick(item.view)}
+              />
+            ))}
+            {/* Adicionar Login/Logout/Share no menu mobile */}
+            {!user && (
+                <button
+                    onClick={() => handleNavClick('auth')}
+                    className="btn-primary"
+                    style={{ padding: '0.5rem 1rem' }}
+                >
+                    Login / Criar Conta
                 </button>
-            </div>
-            <nav className="flex-grow py-4">
-                {navItems.map(item => (
-                <NavLink
-                    key={item.view}
-                    view={item.view}
-                    label={item.label}
-                    currentView={currentView}
-                    onClick={() => handleNavClick(item.view)}
-                    isMobile={true}
-                />
-                ))}
-            </nav>
-             <div className="p-4 border-t">
-                {user ? (
-                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-slate-700">
-                            <UserIcon className="h-6 w-6" />
-                            <span className="font-semibold">{user.name}</span>
-                        </div>
-                        <button onClick={onLogout} className="flex items-center gap-2 text-red-500 font-semibold p-2 rounded-lg hover:bg-red-100">
-                           <span>Sair</span>
-                           <LogoutIcon className="h-5 w-5" />
-                        </button>
-                    </div>
-                ) : (
-                    <button
-                        onClick={() => handleNavClick('auth')}
-                        className="w-full bg-[#EF7669] text-white font-semibold py-3 rounded-lg hover:bg-[#E65F4C] shadow"
-                    >
-                        Login / Criar Conta
-                    </button>
-                )}
-            </div>
-        </div>
-      </div>
+            )}
+          </nav>
+      )}
     </header>
   );
 };
