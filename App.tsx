@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { db } from './src/firebase.ts';
+import { db } from './firebase';
 import { InitialCost, Room, PurchaseItem, ChecklistSection, RecurringCost, ChecklistItem, User } from './types';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';

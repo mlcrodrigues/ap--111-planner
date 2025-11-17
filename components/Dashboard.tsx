@@ -1,155 +1,115 @@
-import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { ChecklistSection, InitialCost, Room, PurchaseItem } from '../types';
+import React from 'react';
+import { InitialCost, Room, PurchaseItem, ChecklistSection } from '../types'; 
 
+// 1. Definição das Props (Interfaces)
 interface DashboardProps {
-    sections: ChecklistSection[];
-    initialCosts: InitialCost[];
-    rooms: Room[];
-    purchases: PurchaseItem[];
-    projectName: string;
-    setProjectName: (name: string) => void;
+  sections: ChecklistSection[];
+  initialCosts: InitialCost[];
+  rooms: Room[];
+  purchases: PurchaseItem[];
+  projectName: string;
+  setProjectName: (name: string) => void; 
 }
 
-const ProjectTitle: React.FC<{ name: string; setName: (name: string) => void }> = ({ name, setName }) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [tempName, setTempName] = useState(name);
-    const inputRef = useRef<HTMLInputElement>(null);
+// 2. Funções de Cálculo do Dashboard
+const calculateTotalCost = (costs: InitialCost[]) => {
+  return costs.reduce((sum, cost) => sum + cost.value, 0);
+};
 
-    useEffect(() => {
-        if (isEditing) {
-            inputRef.current?.focus();
-        }
-    }, [isEditing]);
+const calculateProgress = (sections: ChecklistSection[]) => {
+  let totalItems = 0;
+  let completedItems = 0;
 
-    const handleSave = () => {
-        if (tempName.trim()) {
-            setName(tempName.trim());
-        } else {
-            setTempName(name);
-        }
-        setIsEditing(false);
-    };
-    
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') handleSave();
-        else if (e.key === 'Escape') {
-            setTempName(name);
-            setIsEditing(false);
-        }
-    }
+  sections.forEach(section => {
+    totalItems += section.items.length;
+    completedItems += section.items.filter(item => item.completed).length;
+  });
 
-    if (isEditing) {
-        return (
-            <input 
-                ref={inputRef}
-                type="text"
-                value={tempName}
-                onChange={(e) => setTempName(e.target.value)}
-                onBlur={handleSave}
-                onKeyDown={handleKeyDown}
-                className="text-3xl font-bold text-slate-800 bg-slate-100 rounded-lg px-2 py-1 outline-none w-full md:w-auto"
-            />
-        )
-    }
-
-    return (
-        <h2 onClick={() => setIsEditing(true)} className="text-3xl font-bold text-slate-800 cursor-pointer p-1 rounded-lg hover:bg-slate-100" title="Clique para editar">
-            {name}
-        </h2>
-    );
-}
+  if (totalItems === 0) return 0;
+  return Math.round((completedItems / totalItems) * 100);
+};
 
 
-const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, purchases, projectName, setProjectName }) => {
-    const progressData = useMemo(() => {
-        if (!sections || sections.length === 0) {
-            return { progress: 0, label: 'Nenhuma tarefa' };
-        }
+const Dashboard: React.FC<DashboardProps> = ({
+  sections,
+  initialCosts,
+  rooms,
+  purchases,
+  projectName,
+  setProjectName,
+}) => {
+  
+  // Executa os cálculos
+  const progressPercent = calculateProgress(sections);
+  const totalCost = calculateTotalCost(initialCosts);
+  
+  // Formatação para BRL
+  const formatBRL = (value: number) => 
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
+  // Encontra a última compra para exibição
+  const lastPurchase = purchases.length > 0 ? purchases[purchases.length - 1] : null;
+
+  return (
+    <div className="dashboard-grid">
+      
+      {/* --------------------------- CARD 1: TÍTULO E PROGRESSO --------------------------- */}
+      <div className="card large-card title-card" style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}>
+        <h1 className="text-xl font-bold mb-4">
+          {projectName}
+          {/* Implementação futura de edição de nome: */}
+          {/* <button onClick={() => alert('Implementar edição!')}>✏️</button> */}
+        </h1>
         
-        const allItems = sections.flatMap(s => s.items);
-        const totalItems = allItems.length;
-        const completedItems = allItems.filter(item => item.completed).length;
-        const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+        <h2 className="text-sm font-semibold mb-2">Progresso da Jornada</h2>
         
-        const currentSection = sections.find(s => s.items.some(i => !i.completed)) || sections[sections.length - 1];
-        
-        return { progress, label: `Próximo Passo: ${currentSection.title}` };
-    }, [sections]);
-    
-    // Cálculos Financeiros
-    const totalInitialCosts = useMemo(() => initialCosts.reduce((acc, cost) => acc + cost.value, 0), [initialCosts]);
-    const totalRoomsCost = useMemo(() => rooms.reduce((total, room) => {
-        const materialsTotal = room.materials.reduce((acc, item) => acc + item.quantity * item.unitPrice, 0);
-        const laborTotal = room.labor.reduce((acc, item) => acc + item.price, 0);
-        return total + materialsTotal + laborTotal;
-    }, 0), [rooms]);
-    const totalPurchases = useMemo(() => purchases.reduce((acc, purchase) => acc + purchase.price, 0), [purchases]);
-    const grandTotal = useMemo(() => totalInitialCosts + totalRoomsCost + totalPurchases, [totalInitialCosts, totalRoomsCost, totalPurchases]);
-
-    const formatCurrency = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-    const { progress, label } = progressData;
-
-    const radius = 52;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (progress / 100) * circumference;
-
-    return (
-        <div className="animate-fade-in space-y-8">
-            <ProjectTitle name={projectName} setName={setProjectName} />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-lg text-center flex flex-col justify-center items-center">
-                    <h3 className="text-xl font-bold text-slate-700 mb-4">Progresso da Jornada</h3>
-                    <div className="relative flex justify-center items-center">
-                        <svg width="150" height="150" viewBox="0 0 150 150">
-                            <circle cx="75" cy="75" r={radius} stroke="#f3f4f6" strokeWidth="14" fill="transparent" />
-                            <circle
-                                cx="75"
-                                cy="75"
-                                r={radius}
-                                stroke="#EF7669"
-                                strokeWidth="14"
-                                fill="transparent"
-                                strokeDasharray={circumference}
-                                strokeDashoffset={offset}
-                                strokeLinecap="round"
-                                transform="rotate(-90 75 75)"
-                                style={{ transition: 'stroke-dashoffset 0.5s ease-out' }}
-                            />
-                        </svg>
-                        <div className="absolute flex flex-col items-center justify-center">
-                            <span className="text-4xl font-bold text-[#202945]">
-                                {`${Math.round(progress)}%`}
-                            </span>
-                        </div>
-                    </div>
-                    <p className="mt-4 text-slate-500 font-semibold">{label}</p>
-                    <p className="text-sm text-slate-400 mt-1">Visite a aba "Jornada" para ver todos os passos.</p>
-                </div>
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
-                    <h3 className="text-xl font-bold text-slate-700 mb-4">Resumo Financeiro</h3>
-                    <div className="space-y-4">
-                        <div className="flex justify-between items-center p-4 bg-slate-50 rounded-lg">
-                            <span className="font-semibold text-slate-600">Custos Iniciais</span>
-                            <span className="font-bold text-lg text-slate-800">{formatCurrency(totalInitialCosts)}</span>
-                        </div>
-                        <div className="flex justify-between items-center p-4 bg-slate-50 rounded-lg">
-                            <span className="font-semibold text-slate-600">Reformas (Cômodos)</span>
-                            <span className="font-bold text-lg text-slate-800">{formatCurrency(totalRoomsCost)}</span>
-                        </div>
-                        <div className="flex justify-between items-center p-4 bg-slate-50 rounded-lg">
-                            <span className="font-semibold text-slate-600">Compras</span>
-                            <span className="font-bold text-lg text-slate-800">{formatCurrency(totalPurchases)}</span>
-                        </div>
-                        <div className="mt-4 pt-4 border-t-2 border-dashed border-slate-200 flex justify-between items-center">
-                            <span className="text-lg font-bold text-slate-600">Total Geral</span>
-                            <span className="text-2xl font-bold text-[#EF7669]">{formatCurrency(grandTotal)}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div className="progress-display flex items-center justify-between">
+          <div className="progress-ring-container" style={{ width: '80px', height: '80px' }}>
+            {/* Implementar Gráfico de Progresso Circular (ex: usando SVG ou div + CSS) */}
+            <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{progressPercent}%</div>
+          </div>
+          <p className="text-lg ml-4">{progressPercent}% das etapas concluídas!</p>
         </div>
-    );
+      </div>
+      
+      {/* --------------------------- CARD 2: RESUMO FINANCEIRO --------------------------- */}
+      <div className="card">
+        <h2 className="section-title" style={{ color: 'var(--color-primary)' }}>Resumo Financeiro</h2>
+        
+        <div className="mt-2">
+          <p className="font-semibold text-sm">Custo Inicial Total:</p>
+          <p className="text-2xl" style={{ color: 'var(--color-accent)' }}>{formatBRL(totalCost)}</p>
+        </div>
+        
+        <div className="mt-4 border-t pt-3">
+          <p className="font-semibold text-sm">Cômodos Cadastrados:</p>
+          <p className="text-xl">{rooms.length}</p>
+        </div>
+      </div>
+      
+      {/* --------------------------- CARD 3: ÚLTIMA ATIVIDADE --------------------------- */}
+      <div className="card">
+        <h2 className="section-title" style={{ color: 'var(--color-primary)' }}>Última Compra</h2>
+        
+        {lastPurchase ? (
+          <div className="mt-2">
+            <p className="font-semibold">{lastPurchase.itemName}</p>
+            <p className="text-lg" style={{ color: 'var(--color-accent)' }}>{formatBRL(lastPurchase.price)}</p>
+            <p className="text-xs text-gray-500">em {lastPurchase.store}</p>
+          </div>
+        ) : (
+          <p className="text-gray-500">Nenhuma compra registrada ainda.</p>
+        )}
+      </div>
+
+      {/* --------------------------- CARD 4: LINKS RÁPIDOS (Exemplo) --------------------------- */}
+      <div className="card">
+        <h2 className="section-title" style={{ color: 'var(--color-primary)' }}>Ações Rápidas</h2>
+        <button className="btn-primary w-full mt-2">Ver Custos Iniciais</button>
+        <button className="btn-primary w-full mt-2" style={{ backgroundColor: '#ccc', color: 'var(--color-text-dark)' }}>Adicionar Compra</button>
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;

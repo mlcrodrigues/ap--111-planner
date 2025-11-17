@@ -1,0 +1,61 @@
+/* Definição da Fonte (Avenir Next) e Cores do Projeto */
+body {
+    /* O navegador usará Avenir Next, Avenir, ou a sans-serif padrão */
+    font-family: 'Avenir Next', 'Avenir', sans-serif;
+    background-color: #EBF2FA; /* Cinza Azulado Claro (Fundo Principal) */
+}
+
+/* Variáveis CSS para facilitar o uso das cores */
+:root {
+    --color-primary: #1B4965; /* Azul Marinho Sólido */
+    --color-accent: #FF6B6B; /* Coral Suave (CTA) */
+    --color-text-dark: #222222;
+    --color-background-card: #FFFFFF; 
+}
+
+/* Estilos de Elementos Comuns (Substituindo classes Tailwind) */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+/* Classe para Botões Principais (CTA) */
+.btn-primary {
+    background-color: var(--color-accent);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #e56060; /* Coral ligeiramente mais escuro */
+}
+
+/* Estilo para Cards/Containers de Informação */
+.card {
+    background-color: var(--color-background-card);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
+}
+
+/* Títulos de Seção */
+.section-title {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    font-weight: 700; /* Bold na Avenir Next */
+    margin-bottom: 1rem;
+}
+
+/* Headers do App */
+.app-header {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
