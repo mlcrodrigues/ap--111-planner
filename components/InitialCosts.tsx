@@ -51,10 +51,10 @@ const InitialCosts: React.FC<InitialCostsProps> = ({ costs, onUpdate, onAdd, onR
       <div className="space-y-4">
         {costs.map(cost => (
           // Usando Grid e classes de status puras
-          <div key={cost.id} className={`flex items-center p-3 rounded-lg hover-bg-light transition-colors ${getStatusColor(cost.dueDate)}`} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '1rem', backgroundColor: '#F9FAFB' }}>
+          <div key={cost.id} className={`flex items-center p-3 rounded-lg hover-bg-light transition-colors ${getStatusColor(cost.dueDate)}`} style={{ display: 'grid', padding: '0.5rem, 0' , gridTemplateColumns: '1fr 1fr 1fr auto', gap: '2rem', backgroundColor: '#F9FAFB' }}>
             <span style={{ fontWeight: 600, color: 'var(--color-text-dark)' }}>{cost.name}</span>
             <div>
-              <label className="data-label" style={{ display: 'block', marginBottom: '0.25rem' }}>Valor</label>
+              <label className="data-label" style={{ display: 'block', margin: '0.25rem' }}>Valor</label>
               <input
                 type="number"
                 value={cost.value}

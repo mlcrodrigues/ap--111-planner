@@ -45,7 +45,7 @@ const BillAlerts: React.FC<BillAlertsProps> = ({ costs, onAdd, onRemove, onUpdat
     <div className="animate-fade-in">
        <div className="card mb-6">
         <h2 className="section-title" style={{ margin: 0 }}>Adicionar Conta Recorrente</h2>
-        <form onSubmit={handleAdd} className="flex flex-wrap items-end gap-4" style={{ marginTop: '1rem' }}>
+        <form onSubmit={handleAdd} className="flex flex-wrap items-end gap-4" style={{ marginTop: '1rem', gap: '2rem' }}>
           <div style={{ flex: 2 }}>
             <label className="data-label" style={{ marginBottom: '0.25rem' }}>Descrição</label>
             <input type="text" placeholder="Ex: Internet" value={newCost.name} onChange={e => setNewCost({...newCost, name: e.target.value})} className="input-field" required />

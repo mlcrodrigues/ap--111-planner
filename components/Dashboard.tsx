@@ -100,7 +100,7 @@ const ProgressRing: React.FC<{ progress: number }> = ({ progress }) => {
 };
 
 
-const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, purchases, projectName, setProjectName }) => {
+const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, purchases, projectName, setProjectName, onNavigate }) => {
     
     // --- Lógica de Cálculo de Dados ---
     
@@ -203,7 +203,14 @@ const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, pu
                     <p className="data-value-small">{formatCurrency(totalRoomsCost)}</p>
                 </div>
 
-                <button className="btn-primary mt-6">Gerenciar Cômodos</button>
+              
+        <button 
+                    className="btn-primary" 
+                    style={{ marginTop: '1.5rem' }}
+                    onClick={() => onNavigate('rooms')} 
+                >
+                    Gerenciar Cômodos
+                </button>
             </div>
         </div>
     );

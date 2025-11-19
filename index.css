@@ -1,13 +1,14 @@
+/* --- 1. VARIÁVEIS DE COR E TIPOGRAFIA --- */
 :root {
-    --color-primary: #1B4965; /* Azul Marinho Sólido (Seriedade) */
-    --color-accent: #FF6B6B; /* Coral Suave (Jovialidade / CTA) */
+    --color-primary: #1B4965; /* Azul Marinho Sólido */
+    --color-accent: #FF6B6B; /* Coral Suave */
     --color-text-dark: #222222;
     --color-background-card: #FFFFFF; 
     --color-background-main: #EBF2FA; /* Cinza Azulado Claro */
-    --color-sub-data: #6C7A89; /* Cinza para dados secundários */
-    --color-success: #28a745; /* Verde para sucesso */
-    --color-warning: #ffc107; /* Amarelo para atenção */
-    --color-danger: #dc3545; /* Vermelho para perigo */
+    --color-sub-data: #6C7A89;
+    --color-success: #28a745;
+    --color-warning: #ffc107;
+    --color-danger: #dc3545;
 }
 
 body {
@@ -19,26 +20,23 @@ body {
     line-height: 1.5;
 }
 
-/* --- 2. LAYOUT GERAL E UTILITÁRIOS --- */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 1rem;
+/* --- 2. UTILITÁRIOS FLEXBOX (CORRIGIDO) --- */
+.flex { 
+    display: flex; /* CORREÇÃO: era 'flexbox' (inválido) */
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+.flex-group { 
+    display: flex; /* CORREÇÃO */
+    flex-wrap: wrap; 
+    gap: 1rem;
+    /* 'column: row' não existe, removido */
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.flex-col { 
+    display: flex; /* CORREÇÃO */
+    flex-direction: column; 
 }
 
-/* Utilitários Flex (substitui classes flex/gap) */
-.flex { display: flexbox; }
-.flex-group { display: flexbox; flex-wrap: wrap; }
-.flex-col { flex-direction: column; }
 .justify-between { justify-content: space-between; }
 .items-center { align-items: center; }
 .gap-2 { gap: 0.5rem; }
@@ -48,19 +46,12 @@ body {
 
 
 /* --- 3. HEADER E NAVEGAÇÃO --- */
-.flex-group {
-    display: flex;
-    flex-wrap: wrap;
-    column: row;   
-    gap: 1rem;
-}   
-
 .app-header {
     background-color: var(--color-primary); 
-    color: white; 
+    color: white;
+    padding: 1rem 2rem; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
-    position: relative;
-    width: 100%; 
+    position: relative; 
 }
 
 .header-content {
@@ -78,7 +69,7 @@ body {
 
 /* Navegação Desktop */
 .nav-links-desktop {
-    display: none;
+    display: none; /* Mobile First */
     gap: 1.5rem;
 }
 
@@ -93,20 +84,15 @@ body {
     font-weight: 500;
 }
 
-.nav-links-desktop button:hover, .nav-links-desktop button.active {
+.nav-links-desktop button.active, .nav-links-desktop button:hover {
     color: var(--color-accent);
 }
 
-/* Menu Toggle (Mobile) */
-.mobile-menu-toggle {
-    display: block; 
-}
+/* Menu Mobile */
+.mobile-menu-toggle { display: block; }
+.header-actions { display: none; }
 
-.header-actions {
-    display: none; 
-}
-
-/* Navegação Mobile (Aberta) */
+/* Navegação Mobile Aberta */
 .nav-links-mobile button {
     background: none;
     border: none;
@@ -122,34 +108,29 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* --- Media Query para Desktop (a partir de 768px) --- */
+/* MEDIA QUERY: DESKTOP */
 @media (min-width: 768px) {
-    .nav-links-desktop {
-        display: flex; 
-    }
-    .mobile-menu-toggle {
-        display: none; 
-    }
-    .header-actions {
-        display: flex; 
-    }
-    .container {
-        padding: 1rem 4rem; 
-    }
-    .app-header .container {
-        padding: 0 0; /* Remove padding extra dentro do container do header no desktop */
-    }
-    .app-header {
-        padding: 1rem 4rem; /* Aplica o padding externo aqui */
-    }
+    .nav-links-desktop { display: flex; }
+    .mobile-menu-toggle { display: none; }
+    .header-actions { display: flex; }
+    .container { padding: 1rem 4rem; }
+    .app-header { padding: 1rem 4rem; }
 }
 
-/* --- 4. DASHBOARD GRID E CARDS --- */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 2rem; 
-    margin-top: 2rem;
+/* --- 4. COMPONENTES GERAIS --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .card {
@@ -171,8 +152,6 @@ body {
     font-weight: 700;
     margin-bottom: 1rem;
 }
-
-/* ... (Restante do CSS) ... */
 
 /* --- 5. COMPONENTES DE FORMS E BOTÕES --- */
 .input-field {
@@ -204,10 +183,14 @@ body {
     text-align: center;
 }
 
+.btn-primary:hover {
+    background-color: #e56060; 
+}
+
 .btn-secondary {
-    background-color: #F3F4F6; 
-    color: var(--color-text-dark);
-    padding: 0.75rem 1.5rem;
+    background-color: rgba(255, 255, 255, 0.1); 
+    color: white;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
     font-weight: 500;
     cursor: pointer;
@@ -216,5 +199,27 @@ body {
 }
 
 .btn-secondary:hover {
-    background-color: #E5E7EB;
+    background-color: rgba(255, 255, 255, 0.2);
 }
+
+.icon-btn-remove {
+    color: var(--color-danger);
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 2rem; 
+    margin-top: 2rem;
+}
+
+/* Status Colors */
+.status-danger { border-left: 4px solid var(--color-danger); background-color: rgba(220, 53, 69, 0.05); }
+.status-warning { border-left: 4px solid var(--color-warning); background-color: rgba(255, 193, 7, 0.05); }
+.status-success { border-left: 4px solid var(--color-success); background-color: rgba(40, 167, 69, 0.05); }
