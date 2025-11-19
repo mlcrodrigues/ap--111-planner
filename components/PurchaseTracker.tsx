@@ -23,7 +23,7 @@ const PurchaseTracker: React.FC<PurchaseTrackerProps> = ({ purchases, onAdd, onR
   const [newItem, setNewItem] = useState({
     itemName: '',
     store: '',
-    price: 0,
+    price: '',
     paymentMethod: paymentMethods[0] || '',
     purchaseDate: new Date().toISOString().split('T')[0],
   });
@@ -95,13 +95,12 @@ const PurchaseTracker: React.FC<PurchaseTrackerProps> = ({ purchases, onAdd, onR
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newItem.itemName.trim() && newItem.store.trim() && newItem.price > 0 && newItem.purchaseDate) {
-      onAdd(newItem);
-      setNewItem({
-        itemName: '', store: '', price: 0,
-        paymentMethod: paymentMethods[0] || '',
-        purchaseDate: new Date().toISOString().split('T')[0],
+    if (newItem.itemName && newItem.price) {
+      onAdd({
+        ...newItem,
+        price: parseFloat(newItem.price),
       });
+      setNewItem({ ...newItem, itemName: '', price: '' });
     }
   };
 
@@ -115,21 +114,25 @@ const PurchaseTracker: React.FC<PurchaseTrackerProps> = ({ purchases, onAdd, onR
   const ViewButton: React.FC<{ mode: GroupBy, label: string, icon: React.ReactNode }> = ({ mode, label, icon }) => (
     <button
       onClick={() => setViewMode(mode)}
-      className={`btn-secondary flex items-center gap-2 ${
-        viewMode === mode ? 'active-view-btn' : ''
-      }`}
+      className="btn-secondary"
       style={{ 
         backgroundColor: viewMode === mode ? 'var(--color-accent)' : '#F3F4F6', 
         color: viewMode === mode ? 'white' : 'var(--color-text-dark)',
         fontWeight: 600,
         boxShadow: viewMode === mode ? '0 2px 4px rgba(255, 107, 107, 0.4)' : 'none',
-        padding: '0.5rem 1rem',
+        padding: '0.5rem 0.75rem', /* Padding reduzido para caber melhor */
         borderRadius: '8px',
-        flexShrink: 0 /* Impede que o botão encolha demais */
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        fontSize: '0.9rem',
+        flexGrow: 1, /* Faz o botão crescer para preencher espaço disponível */
+        justifyContent: 'center',
+        minWidth: 'max-content' /* Garante que o texto não quebre feio */
       }}
     >
       {icon}
-      <span style={{ display: 'inline' }}>{label}</span>
+      <span>{label}</span>
     </button>
   );
 
@@ -138,59 +141,46 @@ const PurchaseTracker: React.FC<PurchaseTrackerProps> = ({ purchases, onAdd, onR
       <div className="card mb-6">
         <h2 className="section-title" style={{ margin: 0 }}>Adicionar Nova Compra</h2>
         
-        {/* FORMULÁRIO REORGANIZADO */}
-        <form onSubmit={handleAdd} className="space-y-4" style={{ marginTop: '1.5rem' }}>
-          
-          {/* Linha 1: Item */}
+        <form onSubmit={handleAdd} style={{ marginTop: '1.5rem' }}>
           <div className="form-row">
             <div className="input-group">
               <label className="input-label">Item</label>
-              <input type="text" placeholder="Ex: Sofá" value={newItem.itemName} onChange={e => setNewItem({...newItem, itemName: e.target.value})} className="input-field" required />
+              <input className="input-field" placeholder="Ex: Sofá" value={newItem.itemName} onChange={e => setNewItem({...newItem, itemName: e.target.value})} required />
             </div>
           </div>
           
-          {/* Linha 2: Loja + Data */}
           <div className="form-row two-cols">
             <div className="input-group">
               <label className="input-label">Loja</label>
-              <input type="text" placeholder="Ex: Mobly" value={newItem.store} onChange={e => setNewItem({...newItem, store: e.target.value})} className="input-field" required/>
+              <input className="input-field" placeholder="Ex: Mobly" value={newItem.store} onChange={e => setNewItem({...newItem, store: e.target.value})} required/>
             </div>
             <div className="input-group">
               <label className="input-label">Data</label>
-              <input type="date" value={newItem.purchaseDate} onChange={e => setNewItem({...newItem, purchaseDate: e.target.value})} className="input-field" required/>
+              <input type="date" className="input-field" value={newItem.purchaseDate} onChange={e => setNewItem({...newItem, purchaseDate: e.target.value})} required/>
             </div>
           </div>
           
-          {/* Linha 3: Preço + Pagamento */}
           <div className="form-row two-cols">
              <div className="input-group">
               <label className="input-label">Preço (R$)</label>
-              <input type="number" step="0.01" placeholder="0.00" value={newItem.price || ''} onChange={e => setNewItem({...newItem, price: parseFloat(e.target.value) || 0})} className="input-field" required/>
+              <input type="number" step="0.01" className="input-field" placeholder="0.00" value={newItem.price} onChange={e => setNewItem({...newItem, price: e.target.value})} required/>
             </div>
 
             <div className="input-group">
               <label className="input-label">Forma de Pagamento</label>
-              {/* flex-wrap adicionado aqui para que inputs não vazem no mobile */}
-              <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
-                <select value={newItem.paymentMethod} onChange={e => setNewItem({...newItem, paymentMethod: e.target.value})} className="input-field" style={{ flexGrow: 1, minWidth: '120px' }}>
+              <div className="flex gap-2">
+                <select value={newItem.paymentMethod} onChange={e => setNewItem({...newItem, paymentMethod: e.target.value})} className="input-field" style={{ flexGrow: 1 }}>
                     {paymentMethods.map(method => <option key={method} value={method}>{method}</option>)}
                 </select>
-                <div className="flex gap-2" style={{ flexGrow: 1 }}>
-                   <input type="text" value={newPaymentMethod} onChange={e => setNewPaymentMethod(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddPaymentMethod()} placeholder="Nova..." className="input-field" style={{ minWidth: '80px', flexGrow: 1 }}/>
-                   <button type="button" onClick={handleAddPaymentMethod} className="btn-secondary" style={{ width: '48px', flexShrink: 0 }}><PlusIcon style={{ width: '1.25rem', height: '1.25rem' }}/></button>
-                </div>
               </div>
             </div>
           </div>
           
-          {/* Linha 4: Botão Adicionar (Full Width para não sobrepor) */}
-          <div className="form-row">
-             <button type="submit" className="btn-primary">
-                  <PlusIcon style={{ width: '1.25rem', height: '1.25rem' }}/>
-                  <span>Adicionar</span>
-              </button>
-          </div>
-
+          {/* Botão em linha cheia para evitar quebra */}
+          <button type="submit" className="btn-primary" style={{ marginTop: '1rem', width: '100%' }}>
+              <PlusIcon style={{ width: '1.25rem', height: '1.25rem' }}/>
+              <span>Adicionar</span>
+          </button>
         </form>
       </div>
 
@@ -201,8 +191,16 @@ const PurchaseTracker: React.FC<PurchaseTrackerProps> = ({ purchases, onAdd, onR
             <span style={{ fontWeight: 700, color: 'var(--color-accent)', fontSize: '1.25rem', backgroundColor: '#F9FAFB', padding: '0.25rem 0.75rem', borderRadius: '9999px' }}>{formatCurrency(grandTotal)}</span>
           </div>
           
-          {/* BOTÕES DE FILTRO: Adicionado flexWrap: 'wrap' para não vazar no mobile */}
-          <div className="flex gap-2" style={{ backgroundColor: '#F3F4F6', padding: '0.25rem', borderRadius: '8px', flexWrap: 'wrap' }}>
+          {/* BOTÕES DE FILTRO: Container com flex-wrap garantido */}
+          <div style={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: '0.5rem', 
+              width: '100%', 
+              backgroundColor: '#F3F4F6', 
+              padding: '0.5rem', 
+              borderRadius: '8px' 
+          }}>
               <ViewButton mode="store" label="Loja" icon={<StoreIcon style={{ width: '1.25rem', height: '1.25rem' }}/>} />
               <ViewButton mode="payment" label="Pagamento" icon={<CreditCardIcon style={{ width: '1.25rem', height: '1.25rem' }}/>} />
               <ViewButton mode="date" label="Mês" icon={<CalendarIcon style={{ width: '1.25rem', height: '1.25rem' }}/>} />
@@ -210,10 +208,9 @@ const PurchaseTracker: React.FC<PurchaseTrackerProps> = ({ purchases, onAdd, onR
           </div>
         </div>
 
-        {/* Listagem de Dados */}
+        {/* Listagem (sem alterações na lógica, apenas mantendo o existente) */}
         {viewMode === 'list' ? (
           <div className="card">
-             {/* Cabeçalho da lista simplificado para mobile (oculta colunas menos importantes) */}
              <div className="data-header-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '1rem', fontWeight: 'bold', paddingBottom: '0.5rem', borderBottom: '2px solid #F3F4F6', fontSize: '0.9rem', color: 'var(--color-sub-data)' }}>
                 <div style={{ gridColumn: 'span 4' }}>Item/Loja</div>
                 <div style={{ gridColumn: 'span 2', textAlign: 'center' }}>Data</div>

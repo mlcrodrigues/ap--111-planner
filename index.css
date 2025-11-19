@@ -59,6 +59,39 @@ body {
     .form-row.with-btn { grid-template-columns: 1fr auto; } /* Input + Botão */
 }
 
+.nav-links-desktop, .header-actions {
+    display: none !important; 
+}
+
+.app-header {
+    background-color: var(--color-primary); 
+    color: white;
+    padding: 1rem 1.5rem; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    position: relative; 
+    z-index: 50;
+}
+
+.mobile-menu-toggle { 
+    display: block !important; 
+}
+
+/* Navegação Mobile Aberta (o menu que aparece quando clica no hambúrguer) */
+.nav-links-mobile {
+    position: absolute; 
+    top: 100%; 
+    left: 0; 
+    right: 0; 
+    background-color: var(--color-primary); 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    padding: 1rem 2rem; 
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 49;
+}
+
 .input-group {
     display: flex;
     flex-direction: column;
@@ -187,6 +220,21 @@ body {
 .status-success { border-left: 4px solid var(--color-success); }
 
 /* Utilitários Flex simples (mantidos para compatibilidade) */
+/* --- 2. UTILITÁRIOS FLEXBOX --- */
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; } /* IMPORTANTE: Permite quebra de linha */
+.flex-col { display: flex; flex-direction: column; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+
+/* Espaçamento Vertical */
+.space-y-4, .space-y-6 { display: flex; flex-direction: column; }
+.space-y-4 > * { margin-top: 1rem; margin-bottom: 0; }
+.space-y-6 > * { margin-top: 1.5rem; margin-bottom: 0; }
+
 .flex { display: flex; }
 .items-center { align-items: center; }
 .justify-between { justify-content: space-between; }
