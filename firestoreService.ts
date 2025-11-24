@@ -7,6 +7,7 @@ import {
     deleteDoc,
     getDoc
 } from "firebase/firestore";
+
 import { db } from "./firebase"; // Importa sua configuração corrigida
 import { InitialCost, Room, PurchaseItem, RecurringCost, ChecklistSection } from "./types";
 

@@ -99,6 +99,9 @@ body {
 @media (min-width: 768px) {
     .nav-links-desktop {
         display: flex;
+        flex-direction: column;
+        margin-left: 50px;
+        margin-right: 50px;
         gap: 1.5rem;
         align-items: center;
     }
