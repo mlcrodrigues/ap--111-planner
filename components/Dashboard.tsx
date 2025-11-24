@@ -30,7 +30,7 @@ const ProjectTitle: React.FC<{ name: string; setName: (name: string) => void }> 
         }
         setIsEditing(false);
     };
-    
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') handleSave();
         else if (e.key === 'Escape') {
@@ -42,14 +42,14 @@ const ProjectTitle: React.FC<{ name: string; setName: (name: string) => void }> 
     if (isEditing) {
         // Classes customizadas para input de edição
         return (
-            <input 
+            <input
                 ref={inputRef}
                 type="text"
                 value={tempName}
                 onChange={(e) => setTempName(e.target.value)}
                 onBlur={handleSave}
                 onKeyDown={handleKeyDown}
-                className="project-title-input" 
+                className="project-title-input"
             />
         )
     }
@@ -72,7 +72,7 @@ const ProgressRing: React.FC<{ progress: number }> = ({ progress }) => {
         <svg width="120" height="120" viewBox="0 0 120 120" className="progress-ring">
             {/* Fundo do círculo */}
             <circle
-                stroke="rgba(255, 255, 255, 0.3)"
+                stroke="var(--color-border)"
                 fill="transparent"
                 strokeWidth="12"
                 r={radius}
@@ -92,7 +92,7 @@ const ProgressRing: React.FC<{ progress: number }> = ({ progress }) => {
                 transform="rotate(-90 60 60)"
             />
             {/* Texto de porcentagem */}
-            <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold">
+            <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="var(--color-primary)" fontSize="20" fontWeight="bold">
                 {Math.round(progress)}%
             </text>
         </svg>
@@ -101,23 +101,23 @@ const ProgressRing: React.FC<{ progress: number }> = ({ progress }) => {
 
 
 const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, purchases, projectName, setProjectName, onNavigate }) => {
-    
+
     // --- Lógica de Cálculo de Dados ---
-    
+
     const progressData = useMemo(() => {
         const allItems = sections.flatMap(s => s.items);
         const totalItems = allItems.length;
         const completedItems = allItems.filter(item => item.completed).length;
         const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
-        
+
         const nextSection = sections.find(s => s.items.some(i => !i.completed)) || sections[sections.length - 1];
-        
+
         return { progress, label: `Próximo: ${nextSection.title}` };
     }, [sections]);
-    
+
     const totalInitialCosts = useMemo(() => initialCosts.reduce((acc, cost) => acc + cost.value, 0), [initialCosts]);
     const totalPurchases = useMemo(() => purchases.reduce((acc, purchase) => acc + purchase.price, 0), [purchases]);
-    
+
     // Calcula custo de reparos/materiais/mão de obra para Cômodos
     const totalRoomsCost = useMemo(() => rooms.reduce((total, room) => {
         const materialsTotal = room.materials.reduce((acc, item) => acc + item.quantity * item.unitPrice, 0);
@@ -136,15 +136,15 @@ const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, pu
 
     return (
         <div className="dashboard-grid">
-            
+
             {/* --------------------------- CARD PRINCIPAL: TÍTULO, EDIÇÃO E PROGRESSO --------------------------- */}
             <div className="card large-card title-card">
-                
+
                 <ProjectTitle name={projectName} setName={setProjectName} />
-                
+
                 <h3 className="text-lg mt-4 mb-4">Progresso da Jornada</h3>
-                
-                <div className="flex-group">
+
+                <div className="flex items-center gap-4">
                     <ProgressRing progress={progress} />
                     <div className="flex-col ml-6">
                         <p className="font-semibold">{label}</p>
@@ -152,11 +152,11 @@ const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, pu
                     </div>
                 </div>
             </div>
-            
+
             {/* --------------------------- CARD 2: RESUMO GERAL DE CUSTOS --------------------------- */}
             <div className="card">
                 <h2 className="section-title" style={{ color: 'var(--color-primary)' }}>Orçamento Total</h2>
-                
+
                 <div className="data-display">
                     <p className="data-label">Total Gasto/Previsto:</p>
                     <p className="data-value" style={{ color: 'var(--color-accent)' }}>{formatCurrency(grandTotal)}</p>
@@ -166,18 +166,18 @@ const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, pu
                     <p className="data-label">Custos Iniciais:</p>
                     <p className="data-value-small">{formatCurrency(totalInitialCosts)}</p>
                 </div>
-                
+
                 <div className="data-display sub-data">
                     <p className="data-label">Compras/Decoração:</p>
                     <p className="data-value-small">{formatCurrency(totalPurchases + totalRoomsCost)}</p>
                 </div>
-                
+
             </div>
-            
+
             {/* --------------------------- CARD 3: ÚLTIMA ATIVIDADE --------------------------- */}
             <div className="card">
                 <h2 className="section-title" style={{ color: 'var(--color-primary)' }}>Última Compra</h2>
-                
+
                 {lastPurchase ? (
                     <div className="last-purchase-data">
                         <p className="font-semibold">{lastPurchase.itemName}</p>
@@ -188,26 +188,26 @@ const Dashboard: React.FC<DashboardProps> = ({ sections, initialCosts, rooms, pu
                     <p className="text-gray-500">Nenhuma compra registrada ainda.</p>
                 )}
             </div>
-            
+
             {/* --------------------------- CARD 4: RESUMO DE CÔMODOS --------------------------- */}
             <div className="card">
                 <h2 className="section-title" style={{ color: 'var(--color-primary)' }}>Meu Apê</h2>
-                
+
                 <div className="data-display">
                     <p className="data-label">Cômodos Cadastrados:</p>
                     <p className="data-value">{rooms.length}</p>
                 </div>
-                
+
                 <div className="data-display sub-data">
                     <p className="data-label">Custos de Reparos/Mão de Obra:</p>
                     <p className="data-value-small">{formatCurrency(totalRoomsCost)}</p>
                 </div>
 
-              
-        <button 
-                    className="btn-primary" 
+
+                <button
+                    className="btn-primary"
                     style={{ marginTop: '1.5rem' }}
-                    onClick={() => onNavigate('rooms')} 
+                    onClick={() => onNavigate('rooms')}
                 >
                     Gerenciar Cômodos
                 </button>
