@@ -33,10 +33,10 @@ body {
 
 /* --- 2. LAYOUT E GRID --- */
 .container {
-    max-width: 600px;
-    /* Foco em mobile-first, mas limitado em desktop para não esticar */
+    width: 80%;
+    max-width: none;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 1.5rem 0;
 }
 
 .card {
