@@ -1,11 +1,10 @@
+```
 import {
     collection,
     doc,
     getDocs,
     setDoc,
     deleteDoc,
-    updateDoc,
-    query,
     getDoc
 } from "firebase/firestore";
 import { db } from "./firebase"; // Importa sua configuração corrigida
@@ -19,9 +18,9 @@ export const saveItem = async (userId: string, collectionName: string, item: any
         // Cria uma referência: users/{userId}/{collectionName}/{item.id}
         const itemRef = doc(db, "users", userId, collectionName, item.id);
         await setDoc(itemRef, item);
-        console.log(`Item salvo em ${collectionName}`);
+        console.log(`Item salvo em ${ collectionName } `);
     } catch (error) {
-        console.error(`Erro ao salvar em ${collectionName}:`, error);
+        console.error(`Erro ao salvar em ${ collectionName }: `, error);
     }
 };
 
