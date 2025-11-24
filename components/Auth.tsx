@@ -58,6 +58,8 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
             if (err.code === 'auth/email-already-in-use') msg = "Este email já está em uso.";
             if (err.code === 'auth/weak-password') msg = "A senha deve ter pelo menos 6 caracteres.";
             if (err.code === 'auth/invalid-email') msg = "Email inválido.";
+            // Se não for um erro conhecido, mostra a mensagem original (para debug) ou mantém a genérica
+            if (!msg.includes('.')) msg = `Erro: ${err.message}`;
             setError(msg);
         } finally {
             setLoading(false);

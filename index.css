@@ -77,18 +77,18 @@ body {
 }
 
 /* Mobile First: Esconde desktop nav por padrão */
-.nav-links-desktop,
-.header-actions {
+.nav-links-desktop {
     display: none;
 }
 
-.app-header {
-    background-color: var(--color-primary);
-    color: white;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 50;
+.header-actions {
+    display: flex;
+    /* Sempre mostra o container, mas os itens dentro podem ser escondidos */
+}
+
+/* Esconde elementos específicos no mobile */
+.hidden-mobile {
+    display: none !important;
 }
 
 .mobile-menu-toggle {
@@ -130,6 +130,11 @@ body {
     .mobile-menu-toggle {
         display: none;
     }
+
+    .hidden-mobile {
+        display: flex !important;
+        /* Restaura visibilidade no desktop */
+    }
 }
 
 /* Navegação Mobile Aberta (o menu que aparece quando clica no hambúrguer) */
@@ -138,14 +143,32 @@ body {
     top: 100%;
     left: 0;
     right: 0;
+    width: 60%;
     background-color: var(--color-primary);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1rem 2rem;
+    padding: 1rem 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
     gap: 1rem;
     z-index: 49;
+}
+
+.nav-links-mobile button {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nav-links-mobile button.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .input-group {

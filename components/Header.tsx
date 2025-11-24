@@ -78,31 +78,6 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
             ))}
           </nav>
 
-          <div className="header-actions flex items-center gap-4"> {/* Ações de usuário/share */}
-            {user ? (
-              <>
-                <button onClick={onShare} className="btn-secondary flex items-center gap-2" style={{ padding: '0.5rem 1rem' }}>
-                  <ShareIcon style={{ width: '1.25rem', height: '1.25rem' }} />
-                  <span className="hidden-on-small-mobile">Compartilhar</span>
-                </button>
-                <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
-                  <UserIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
-                </div>
-                <button onClick={onLogout} className="icon-btn-remove" style={{ color: 'white', background: 'none' }}>
-                  <LogoutIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setCurrentView('auth')}
-                className="btn-primary"
-                style={{ padding: '0.5rem 1rem' }}
-              >
-                Login
-              </button>
-            )}
-          </div>
-
           {/* Menu Móvel (Toggle) */}
           <div className="mobile-menu-toggle">
             <button
@@ -111,6 +86,31 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
             >
               <MenuIcon style={{ width: '2rem', height: '2rem', color: 'white' }} />
             </button>
+          </div>
+
+          <div className="header-actions flex items-center gap-4"> {/* Ações de usuário/share */}
+            {user ? (
+              <>
+                <button onClick={onShare} className="btn-secondary flex items-center gap-2 hidden-mobile" style={{ padding: '0.5rem 1rem' }}>
+                  <ShareIcon style={{ width: '1.25rem', height: '1.25rem' }} />
+                  <span className="hidden-on-small-mobile">Compartilhar</span>
+                </button>
+                <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+                  <UserIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
+                </div>
+                <button onClick={onLogout} className="icon-btn-remove hidden-mobile" style={{ color: 'white', background: 'none' }}>
+                  <LogoutIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setCurrentView('auth')}
+                className="btn-primary hidden-mobile"
+                style={{ padding: '0.5rem 1rem' }}
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -124,7 +124,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
           right: 0,
           backgroundColor: 'var(--color-primary)',
           boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-          padding: '1rem 2rem',
+          padding: '1rem 1rem',
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
           display: 'flex',
           flexDirection: 'column',
