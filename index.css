@@ -99,9 +99,6 @@ body {
 @media (min-width: 768px) {
     .nav-links-desktop {
         display: flex;
-        flex-direction: column;
-        margin-left: 50px;
-        margin-right: 50px;
         gap: 1.5rem;
         align-items: center;
     }
@@ -241,6 +238,8 @@ body {
 
 .header-content {
     display: flex;
+    margin-left: 50px;
+    margin-right: 50px;
     justify-content: space-between;
     align-items: center;
     padding: 0 1.5rem;
