@@ -61,11 +61,11 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
   return (
     <header className="app-header" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
       {/* O container agora envolve todo o conteúdo do header */}
-      <div className="container"> 
+      <div className="container">
         <div className="header-content"> {/* Usa a nova classe para alinhar o conteúdo */}
-          
+
           <SvgLogo /> {/* Renderiza o logo SvgLogo */}
-          
+
           <nav className="nav-links-desktop"> {/* Links para desktop */}
             {navItems.map(item => (
               <NavLink
@@ -80,31 +80,31 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
 
           <div className="header-actions flex items-center gap-4"> {/* Ações de usuário/share */}
             {user ? (
-                 <>
-                    <button onClick={onShare} className="btn-secondary flex items-center gap-2" style={{ padding: '0.5rem 1rem' }}>
-                        <ShareIcon style={{ width: '1.25rem', height: '1.25rem' }} />
-                        <span className="hidden-on-small-mobile">Compartilhar</span>
-                    </button>
-                    <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
-                        <UserIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
-                    </div>
-                     <button onClick={onLogout} className="icon-btn-remove" style={{ color: 'white', background: 'none' }}>
-                        <LogoutIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
-                    </button>
-                </>
-            ) : (
-                <button
-                    onClick={() => setCurrentView('auth')}
-                    className="btn-primary"
-                    style={{ padding: '0.5rem 1rem' }}
-                >
-                    Login
+              <>
+                <button onClick={onShare} className="btn-secondary flex items-center gap-2" style={{ padding: '0.5rem 1rem' }}>
+                  <ShareIcon style={{ width: '1.25rem', height: '1.25rem' }} />
+                  <span className="hidden-on-small-mobile">Compartilhar</span>
                 </button>
+                <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+                  <UserIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
+                </div>
+                <button onClick={onLogout} className="icon-btn-remove" style={{ color: 'white', background: 'none' }}>
+                  <LogoutIcon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setCurrentView('auth')}
+                className="btn-primary"
+                style={{ padding: '0.5rem 1rem' }}
+              >
+                Login
+              </button>
             )}
           </div>
 
           {/* Menu Móvel (Toggle) */}
-          <div className="mobile-menu-toggle"> 
+          <div className="mobile-menu-toggle">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
@@ -117,39 +117,39 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, user, onLo
 
       {/* Menu Aberto Móvel */}
       {isMenuOpen && (
-          <nav className="nav-links-mobile" style={{ 
-            position: 'absolute', 
-            top: '100%', 
-            left: 0, 
-            right: 0, 
-            backgroundColor: 'var(--color-primary)', 
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', 
-            padding: '1rem 2rem', 
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem'
-          }}>
-            {navItems.map(item => (
-              <NavLink
-                key={item.view}
-                view={item.view}
-                label={item.label}
-                currentView={currentView}
-                onClick={() => handleNavClick(item.view)}
-              />
-            ))}
-            {/* Adicionar Login/Logout/Share no menu mobile */}
-            {!user && (
-                <button
-                    onClick={() => handleNavClick('auth')}
-                    className="btn-primary"
-                    style={{ padding: '0.5rem 1rem' }}
-                >
-                    Login / Criar Conta
-                </button>
-            )}
-          </nav>
+        <nav className="nav-links-mobile" style={{
+          position: 'absolute',
+          top: '70%',
+          left: 0,
+          right: 0,
+          backgroundColor: 'var(--color-primary)',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+          padding: '1rem 2rem',
+          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem'
+        }}>
+          {navItems.map(item => (
+            <NavLink
+              key={item.view}
+              view={item.view}
+              label={item.label}
+              currentView={currentView}
+              onClick={() => handleNavClick(item.view)}
+            />
+          ))}
+          {/* Adicionar Login/Logout/Share no menu mobile */}
+          {!user && (
+            <button
+              onClick={() => handleNavClick('auth')}
+              className="btn-primary"
+              style={{ padding: '0.5rem 1rem' }}
+            >
+              Login / Criar Conta
+            </button>
+          )}
+        </nav>
       )}
     </header>
   );
