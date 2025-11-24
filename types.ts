@@ -72,6 +72,7 @@ export interface MovingCompany {
 
 // Novo tipo para simulação de usuário
 export interface User {
-  name: string;
-  email: string;
+  uid: string;
+  name: string | null;
+  email: string | null;
 }

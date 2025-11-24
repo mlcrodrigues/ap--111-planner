@@ -1,11 +1,12 @@
-import { 
-    collection, 
-    doc, 
-    getDocs, 
-    setDoc, 
-    deleteDoc, 
+import {
+    collection,
+    doc,
+    getDocs,
+    setDoc,
+    deleteDoc,
     updateDoc,
-    query 
+    query,
+    getDoc
 } from "firebase/firestore";
 import { db } from "./firebase"; // Importa sua configuração corrigida
 import { InitialCost, Room, PurchaseItem, RecurringCost, ChecklistSection } from "./types";
@@ -82,10 +83,16 @@ export const loadUserData = async (userId: string) => {
         }
 
         // 6. Carregar Dados do Perfil (Nome do Projeto)
-        // Podemos buscar o documento "pai" (o documento do usuário)
-        // Nota: Firestore Web SDK v9 modular requer buscar o doc especificamente se ele tiver campos na raiz
-        // Mas para simplificar, se você não salvou na raiz antes, usaremos o default.
-        
+        const userDocRef = doc(db, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            if (userData.projectName) {
+                data.projectName = userData.projectName;
+            }
+        }
+
         return data;
 
     } catch (error) {
